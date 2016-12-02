@@ -10,7 +10,8 @@
         android:id="@+id/msnIf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Hello World!"
+        android:layout_weight="1" />
 
 
     <TextView
@@ -20,25 +21,23 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:text="0 %"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_weight="1" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="112dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:id="@+id/floating"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="366dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <Button
             android:id="@+id/btnInicio"
@@ -54,6 +53,36 @@
             android:padding="12dp"
             android:text="Cancelar" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mover"
+            android:id="@+id/ch"
+            android:checked="false" />
+
     </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:background="#ebffc8"
+        android:id="@+id/verde">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/floating"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="12"
+        android:background="#c8f5ff"
+        android:id="@+id/azul" />
 
 </LinearLayout>

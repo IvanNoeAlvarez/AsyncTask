@@ -1,14 +1,13 @@
 package com.example.ivalion.asynctask;
 
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.DragEvent;
 import android.view.MenuInflater;
@@ -16,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar progress;
     int inicioProgreso = 0;
     final int progresoMax = 100;
+    CheckBox ch;
+
+    LinearLayout verde,azul;
 
     FloatingActionButton fabCreate;
 
@@ -47,30 +51,32 @@ public class MainActivity extends AppCompatActivity {
         btnInicio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (async.isCancelled() == false && async.getStatus() != AsyncTask.Status.RUNNING) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Descargando...", Toast.LENGTH_SHORT);
-                    toast.show();
-                    //Al pulsar iniciar empezara el hilo
+                Toast.makeText(MainActivity.this, "Descargando...", Toast.LENGTH_SHORT).show();
 
-                    async.execute();
-                }
+                //Al pulsar iniciar empezara el hilo y desaparecera el boton
+                async.execute();
+                btnInicio.setVisibility(View.INVISIBLE);
+
             }
         });
 
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Se han cancelado las descargas", Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(MainActivity.this, "Descarga cancelada", Toast.LENGTH_SHORT).show();
 
-                //Al pulsar se cancelara el hio
+                //Al pulsar se cancelara el hilo
                 async.cancel(true);
             }
         });
 
 
         /////////////////////////////
+        ch = (CheckBox) findViewById(R.id.ch);
         fabCreate = (FloatingActionButton) findViewById(R.id.floating);
+
+
+        registerForContextMenu(fabCreate);
 
         final View.OnTouchListener mover = new View.OnTouchListener() {
             @Override
@@ -85,45 +91,35 @@ public class MainActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_DOWN:
                         dX = event.getRawX() - view.getX();
                         dY = event.getRawY() - view.getY();
+
                         lastAction = MotionEvent.ACTION_DOWN;
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        view.setY(event.getRawY() + dY);
-                        view.setX(event.getRawX() + dX);
                         lastAction = MotionEvent.ACTION_MOVE;
+                        view.setY(event.getRawY() + dY - 149.0f);
+                        view.setX(event.getRawX() + dX);
                         break;
-                    case MotionEvent.ACTION_HOVER_ENTER:
-                        Toast.makeText(MainActivity.this, "estas sobre algo", Toast.LENGTH_SHORT).show();
-
                     case MotionEvent.ACTION_UP:
-                        if (lastAction == MotionEvent.ACTION_DOWN) {
-                            registerForContextMenu(fabCreate);
-                            Toast.makeText(getApplicationContext(), "Clicado!", Toast.LENGTH_SHORT).show();
-                        }
-                            break;
+                        lastAction = MotionEvent.ACTION_UP;
+                        if (ch.isChecked() == false)
+                            openContextMenu(view);
+                        break;
+
                     case MotionEvent.ACTION_BUTTON_PRESS:
                         intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
+                        break;
                     default:
                         return false;
                 }
+
                 return true;
             }
         };
 
-
-        //fabCreate.setOnClickListener(click);
         fabCreate.setOnTouchListener(mover);
 
-
-        /*fabCreate.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(MainActivity.this, "long", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });*/
 
 
     }
@@ -132,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-
-        inflater.inflate(R.menu.context_punto, menu);
-
+        if (v.getId() == R.id.floating) {
+            inflater.inflate(R.menu.context_punto, menu);
+        }
 
     }
 
